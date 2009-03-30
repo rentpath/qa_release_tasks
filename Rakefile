@@ -71,13 +71,17 @@ class GitTagger
   end
 
   def update_qa
-    system <<-SH
+    response = %x(
       git checkout master    &&
       git pull --tags        &&
       git checkout qa_branch &&
       git pull               &&
       git merge master
-    SH
+    )
+    
+    unless response.include?("Fast forward")
+      warn "There are outstanding changes in qa_branch that may need to be merged into master"
+    end
   end
 
   #  based on 'git status' output, does this repo contain changes that need to be committed?
@@ -121,4 +125,11 @@ class GitTagger
   def git_push_tags
     system "git push --tags"
   end
+  
+  def warn(message)
+    STDERR.puts "*" * 50
+    STDERR.puts "Warning: #{message}"
+    STDERR.puts "*" * 50
+  end
+    
 end

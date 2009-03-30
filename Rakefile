@@ -115,10 +115,6 @@ class GitTagger
 
   def tag_next_version(options={})
     tag = next_version(options)
-    if !tag.match(tag_regexp)
-      STDERR.puts "Error:  Invalid tag #{tag}, must be of the format v.X.X.X (ie: v1.3.2)"
-      exit 1
-    end
     system "git tag #{tag}"
   end
 

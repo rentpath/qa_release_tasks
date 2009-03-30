@@ -49,7 +49,7 @@ class GitTagger
     return 'v0.0.1' unless latest_tag
 
     unless latest_tag.match /\Av\d+\.\d+\.\d+\Z/
-      STDERR.puts "Warning: invalid version number"
+      warn "invalid version number"
       return latest_tag
     end
 
@@ -64,22 +64,20 @@ class GitTagger
     elsif options[:point]
       point.succ!
     else
-      STDERR.puts "Warning: unable to increment version number."
+      warn "unable to increment version number."
     end
 
     'v' + [major, minor, point].join('.')
   end
 
   def update_qa
-    response = %x(
-      git checkout master    &&
-      git pull               &&
-      git checkout qa_branch &&
-      git pull               &&
-      git merge master
-    )
+    system("git checkout master")    &&
+    system("git pull")               &&
+    system("git checkout qa_branch") &&
+    system("git pull")               &&
+    response = %x(git merge master)
     
-    unless response.include?("Fast forward")
+    unless response.include?("Fast forward") || response.include?('Already up-to-date.')
       warn "There are outstanding changes in qa_branch that may need to be merged into master"
     end
   end
@@ -93,7 +91,7 @@ class GitTagger
       if file.nil?
         rval = true unless status =~ /nothing to commit \(working directory clean\)|nothing added to commit but untracked files present/
         if status =~ /nothing added to commit but untracked files present/
-          puts "WARNING: untracked files present in #{dir}"
+          warn "untracked files present in #{dir}"
           show_changed_files(status)
         end
       else
@@ -105,15 +103,13 @@ class GitTagger
 
   def assert_no_local_modifications
     if needs_commit?
-      STDERR.puts "You have local modifications.  Use git commit or git stash to fix that."
-      exit 1
+      error "You have local modifications.  Use git commit or git stash to fix that."
     end
   end
 
   def assert_on_qa_branch
     unless get_branch == 'qa_branch'
-      STDERR.puts "Sorry, you have to be in the qa_branch to do a refresh."
-      exit 1
+      error "Sorry, you have to be in the qa_branch to do a refresh."
     end
   end
 
@@ -131,5 +127,11 @@ class GitTagger
     STDERR.puts "Warning: #{message}"
     STDERR.puts "*" * 50
   end
-    
+  
+  def error(message)
+    STDERR.puts "*" * 50
+    STDERR.puts "Error: #{message}"
+    STDERR.puts "*" * 50
+    exit 1
+  end    
 end

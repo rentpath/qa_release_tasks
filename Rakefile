@@ -4,7 +4,7 @@ namespace :qa do
   namespace :release do
     desc "Create a new minor version release from master."
     task :new do
-      Git::Tagger.new(:minor => true).tag!
+      Git::Tagger.new(:minor => true, :update => true).tag!
     end
 
     desc "Create a new point version release from qa branch."
@@ -152,7 +152,7 @@ module Git
     def tag!
       assert_on_qa_branch
       assert_no_local_modifications
-      update_qa
+      update_qa if options[:update]
       tag_next_version(options)
       git_push_tags
     ensure

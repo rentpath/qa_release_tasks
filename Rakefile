@@ -26,6 +26,8 @@ class GitTagger
     update_qa
     tag_next_version(options)
     git_push_tags
+  ensure
+    system `git checkout qa_branch`
   end
   
   private

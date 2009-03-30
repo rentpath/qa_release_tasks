@@ -41,11 +41,11 @@ class GitTagger
   # Find all tags that match the given pattern
   def get_tags
     version_regexp = /^v\d+\.\d+\.\d+/ # e.g. v1.4.3
-    %x{git tag}.split.grep(version_regexp)
+    %x{git tag}.split.grep(version_regexp).sort_by{|v| v.split('.').map{|nbr| nbr[/\d+/].to_i}}
   end
 
   def next_version(options={})
-    latest_tag = get_tags.last
+    latest_tag = get_tags.last.strip
     return 'v0.0.1' unless latest_tag
 
     unless latest_tag.match /\Av\d+\.\d+\.\d+\Z/

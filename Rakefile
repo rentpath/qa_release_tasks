@@ -122,15 +122,15 @@ module Git
     include Commands
 
     def annotate!
-      tags = get_tags
+      tags = get_tags.reverse
 
-      start_tag = ask "Start at which tag?", tags[-1], tags
-      end_tag = ask "End at which tag?", tags[-2], tags
+      start_tag = ask "Start at which tag?", tags[0], tags
+      end_tag = ask "End at which tag?", tags[1], tags
       end_index = tags.index(end_tag)
       start_index = tags.index(start_tag)
       puts
       
-      tags[end_index..start_index].reverse.each_cons(2) do |start, finish|
+      tags[start_index..end_index].each_cons(2) do |start, finish|
         log = `git log --pretty=format:"%h  %s" refs/tags/#{finish}..refs/tags/#{start}`.strip
         next if log.empty?
         puts "#{start}"

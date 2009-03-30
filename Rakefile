@@ -135,7 +135,7 @@ module Git
         next if log.empty?
         puts "#{start}"
         puts "=" * start.length
-        puts log
+        puts log.split("\n").reject{|line| line.include?("Merge branch 'master' into qa_branch")}
         puts
       end
     end

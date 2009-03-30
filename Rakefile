@@ -124,11 +124,13 @@ module Git
     def annotate!
       tags = get_tags
 
-      start_tag = ask "Start at which tag?", tags[-2], tags
-      end_tag = ask "End at which tag?", tags[-1], tags
-      start_index = tags.index(start_tag)
+      start_tag = ask "Start at which tag?", tags[-1], tags
+      end_tag = ask "End at which tag?", tags[-2], tags
       end_index = tags.index(end_tag)
-      tags[start_index..end_index].reverse.each_cons(2) do |start, finish|
+      start_index = tags.index(start_tag)
+      puts
+      
+      tags[end_index..start_index].reverse.each_cons(2) do |start, finish|
         log = `git log --pretty=format:"%h  %s" refs/tags/#{finish}..refs/tags/#{start}`.strip
         next if log.empty?
         puts "#{start}"

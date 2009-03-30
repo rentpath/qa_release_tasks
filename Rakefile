@@ -44,6 +44,7 @@ class GitTagger
 
   def next_version(options={})
     latest_tag = get_tags.last
+    return 'v0.0.1' unless latest_tag
 
     unless latest_tag.match /\Av\d+\.\d+\.\d+\Z/
       STDERR.puts "Warning: invalid version number"

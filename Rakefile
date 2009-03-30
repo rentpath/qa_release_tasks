@@ -73,7 +73,7 @@ class GitTagger
   def update_qa
     response = %x(
       git checkout master    &&
-      git pull --tags        &&
+      git pull               &&
       git checkout qa_branch &&
       git pull               &&
       git merge master

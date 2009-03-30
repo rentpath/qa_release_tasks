@@ -27,7 +27,7 @@ class GitTagger
     tag_next_version(options)
     git_push_tags
   ensure
-    system `git checkout qa_branch`
+    system 'git checkout qa_branch' unless get_branch == 'qa_branch'
   end
   
   private
@@ -109,7 +109,7 @@ class GitTagger
 
   def assert_on_qa_branch
     unless get_branch == 'qa_branch'
-      error "Sorry, you have to be in the qa_branch to do a refresh."
+      error "You have to be in the qa_branch to do a release."
     end
   end
 

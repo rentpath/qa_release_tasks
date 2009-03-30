@@ -126,7 +126,7 @@ module Git
 
       start_tag = ask "Start at which tag?", tags[0], tags
       end_tag = ask "End at which tag?", tags[1], tags
-      end_index = tags.index(end_tag)
+      end_index = tags.index(end_tag) + 1 # include end tag
       start_index = tags.index(start_tag)
       puts
       

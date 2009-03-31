@@ -7,7 +7,7 @@ require 'spec/rake/spectask'
 require 'lib/qa_release_tasks'
 
 GEM = "qa_release_tasks"
-GEM_VERSION = "0.0.1"
+GEM_VERSION = "0.1.0"
 AUTHORS = "Jason Noble", "Rein Henrichs"
 SUMMARY = "A gem that provides workflow driven rake tasks for git QA branch management"
 

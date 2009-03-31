@@ -15,7 +15,7 @@ module CLI
   def ask(question, default=nil, valid_response=nil, invalid_message=nil)
     loop do
       print "#{question}"
-      print "[#{default}]" if default
+      print " [#{default}]" if default
       print ": "
       answer = STDIN.gets.chomp
       answer = default if default && answer.empty?

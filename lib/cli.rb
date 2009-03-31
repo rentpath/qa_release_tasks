@@ -1,4 +1,17 @@
 module CLI
+  def warn(message)
+    STDERR.puts "*" * 50
+    STDERR.puts "Warning: #{message}"
+    STDERR.puts "*" * 50
+  end
+
+  def error(message)
+    STDERR.puts "*" * 50
+    STDERR.puts "Error: #{message}"
+    STDERR.puts "*" * 50
+    exit 1
+  end
+
   def ask(question, default=nil, valid_response=nil, invalid_message=nil)
     loop do
       print "#{question}"

@@ -61,18 +61,5 @@ module Git
       end
       rval
     end
-
-    def warn(message)
-      STDERR.puts "*" * 50
-      STDERR.puts "Warning: #{message}"
-      STDERR.puts "*" * 50
-    end
-
-    def error(message)
-      STDERR.puts "*" * 50
-      STDERR.puts "Error: #{message}"
-      STDERR.puts "*" * 50
-      exit 1
-    end
   end
 end

@@ -8,10 +8,10 @@ module Git
       tags = get_tags.reverse
       
       start_tag = ask "Start at which tag?", tags[0], tags
-      end_tag = ask "End at which tag?", tags[1] || tags[0], tags
+      start_index = tags.index(start_tag)      
+      end_tag = ask "End at which tag?", tags[start_index + 1] || tags[start_index], tags
       puts
       end_index = tags.index(end_tag) + 1 # include end tag
-      start_index = tags.index(start_tag)      
       
       start_index.upto(end_index-1) do |i|
         start = tags[i]

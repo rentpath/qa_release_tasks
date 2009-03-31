@@ -14,11 +14,11 @@ module Git
     # Find all version tags
     def get_tags
       version_regexp = valid_version_regexp
-      %x{git tag}.split.grep(version_regexp).sort_by{|v| v.split('.').map{|nbr| nbr[/\d+/].to_i}}
+      %x{git tag}.split.grep(version_regexp).sort_by{|v| v.split('.').map{|nbr| nbr[/\d+/].to_i}}.map{|tag| tag.strip}
     end
 
     def next_version(options={})
-      latest_tag = get_tags.last.strip
+      latest_tag = get_tags.last
       return 'v0.0.1' unless latest_tag
 
       unless latest_tag.match valid_version_regexp

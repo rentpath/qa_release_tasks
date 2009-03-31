@@ -5,10 +5,15 @@ module Git
       match = Regexp.new("^# On branch (.*)").match(`git status`)
       match && match[1]
     end
+    
+     # e.g. v1.4.3
+    def valid_version_regexp
+      /^v\d+\.\d+\.\d+/
+    end
 
     # Find all version tags
     def get_tags
-      version_regexp = /^v\d+\.\d+\.\d+/ # e.g. v1.4.3
+      version_regexp = valid_version_regexp
       %x{git tag}.split.grep(version_regexp).sort_by{|v| v.split('.').map{|nbr| nbr[/\d+/].to_i}}
     end
 
@@ -16,7 +21,7 @@ module Git
       latest_tag = get_tags.last.strip
       return 'v0.0.1' unless latest_tag
 
-      unless latest_tag.match /\Av\d+\.\d+\.\d+\Z/
+      unless latest_tag.match valid_version_regexp
         warn "invalid version number"
         return latest_tag
       end

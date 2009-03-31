@@ -1,0 +1,7 @@
+==Summary
+
+QA Release Management Workflow for Git
+
+==Authors
+
+  Jason Noble, Rein Henrichs

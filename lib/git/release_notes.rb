@@ -16,7 +16,10 @@ module Git
       start_index.upto(end_index-1) do |i|
         start = tags[i]
         finish = tags[i+1]
-        log = `git log --no-merges --pretty=format:"%h  %s" #{'refs/tags/' + finish + '..' if finish}refs/tags/#{start}`.strip
+        range = ''
+        range << "refs/tags/#{finish}.." if finish # log until end tag if there is an end tag
+        range << "refs/tags/#{start}"
+        log = `git log --no-merges --pretty=format:"%h  %s" #{range}`.strip
         next if log.empty?
         puts "#{start}"
         puts "=" * start.length

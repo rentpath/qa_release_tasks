@@ -46,8 +46,11 @@ module Git
 
     def tag_next_version(options={})
       tag = next_version(options)
-      new_tag = ask "Name of new version tag ", tag, valid_version_regexp, "Invalid version. Version must be in the format: \"v1.2.3\""
-      system "git tag #{new_tag}"
+      if options[:update]
+        invalid_message = "Invalid version. Version must be in the format: \"v1.2.3\""
+        tag = ask "Name of new version tag ", tag, valid_version_regexp, invalid_message
+      end
+      system "git tag #{tag}"
     end
 
     def git_push_tags

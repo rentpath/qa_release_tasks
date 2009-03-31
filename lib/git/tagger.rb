@@ -1,5 +1,6 @@
 module Git
   class Tagger
+    include CLI
     include Commands
 
     attr_reader :options
@@ -45,7 +46,8 @@ module Git
 
     def tag_next_version(options={})
       tag = next_version(options)
-      system "git tag #{tag}"
+      new_tag = ask "Name of new version tag", tag
+      system "git tag #{new_tag}"
     end
 
     def git_push_tags

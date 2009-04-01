@@ -9,13 +9,16 @@ module Git
     end
 
     def tag!
-      assert_on_qa_branch
-      assert_no_local_modifications
-      update_qa if options[:update]
-      tag_next_version(options)
-      git_push_tags
-    ensure
-      system 'git checkout qa_branch' unless get_branch == 'qa_branch'
+      assert_is_git_repo
+      begin
+        assert_on_qa_branch
+        assert_no_local_modifications
+        update_qa if options[:update]
+        tag_next_version(options)
+        git_push_tags
+      ensure
+        system 'git checkout qa_branch' unless get_branch == 'qa_branch'
+      end
     end
 
     private

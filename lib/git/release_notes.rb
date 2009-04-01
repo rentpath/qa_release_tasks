@@ -5,7 +5,9 @@ module Git
     include Commands
 
     def annotate!
+      assert_is_git_repo
       tags = get_tags.reverse
+      error "No version tags available." if tags.empty?
       
       start_tag = ask "Start at which tag?", tags[0], tags
       start_index = tags.index(start_tag)      

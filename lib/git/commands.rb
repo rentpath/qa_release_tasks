@@ -1,5 +1,14 @@
 module Git
   module Commands
+
+    def assert_is_git_repo
+      error "Not a git repository" unless is_git_repo?
+    end
+
+    def is_git_repo?
+      File.directory?('.git')
+    end
+
     #  figure out what branch the pwd's repo is on
     def get_branch
       match = Regexp.new("^# On branch (.*)").match(`git status`)

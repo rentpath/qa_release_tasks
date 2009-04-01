@@ -2,14 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{qa_release_tasks}
-  s.version = "0.2.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason Noble", "Rein Henrichs"]
-  s.email = ["jason.noble@primedia.com", "reinh@reinh.com"]
-  s.homepage = ['http://www.primedia.com']
-  s.rubyforge_project = 'none'
-  s.date = %q{2009-03-31}
+  s.autorequire = %q{qa_release_tasks}
+  s.date = %q{2009-04-01}
   s.description = %q{A gem that provides workflow driven rake tasks for git QA branch management}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE"]
   s.files = ["LICENSE", "README.rdoc", "Rakefile", "lib/cli.rb", "lib/git", "lib/git/commands.rb", "lib/git/release_notes.rb", "lib/git/tagger.rb", "lib/qa_release_tasks.rb", "lib/tasks", "lib/tasks/qa_release.rake", "lib/tasks/qa_release.rb", "spec/qa_release_tasks_spec.rb", "spec/spec_helper.rb"]

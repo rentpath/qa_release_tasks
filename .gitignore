@@ -1,3 +1,5 @@
 doc/
-qa_release_tasks-0.1.0.gem
+*.swp
 validate.rb
+*.gem
+pkg/

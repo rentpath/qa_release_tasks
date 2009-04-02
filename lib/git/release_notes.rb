@@ -4,6 +4,7 @@ module Git
     include CLI
     include Commands
     
+    attr_reader :options
     def initialize(options = {})
       @options = options
       @limit = options[:limit].nil? ? 20 : options[:limit]
@@ -14,11 +15,16 @@ module Git
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
       
-      start_tag = ask "Start at which tag?", tags[0], tags
-      start_index = tags.index(start_tag)      
-      end_tag = ask "End at which tag?", tags[start_index + 1] || tags[start_index], tags
+      if options[:all]
+        start_index = 0
+        end_index = tags.length - 1
+      else
+        start_tag = options[:from] || ask("Start at which tag?", tags[0], tags)
+        start_index = tags.index(start_tag)   
+        end_tag = options[:to] || ask("End at which tag?", tags[start_index + 1] || tags[start_index], tags)
+        end_index = tags.index(end_tag) + 1 # include end tag
+      end
       puts
-      end_index = tags.index(end_tag) + 1 # include end tag
       
       start_index.upto(end_index-1) do |i|
         start = tags[i]

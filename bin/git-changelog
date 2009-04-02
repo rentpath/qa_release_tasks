@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby -wKU
+require File.join(File.dirname(__FILE__), '../lib/qa_release_tasks')
+require 'optparse'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Git Changelog - Show a list of changes by version."
+  
+  opts.separator ''
+  
+  opts.on_tail('-h', '--help', 'Displays this help message') do
+    puts opt
+    exit
+  end
+  
+  opts.on_tail("--version", "Show version") do
+    puts 'git changelog version ' + QaReleaseTasks.version
+    exit
+  end
+
+  opts.on('-l', '--limit [LIMIT]', Integer, 'Maximum commits for each version, default is 20') do |limit|
+    options[:limit] = limit || 20
+  end
+  
+  opts.on('--no-limit', 'Show all commits for each version') do
+    options[:limit] = false
+  end
+end.parse!
+
+Git::ReleaseNotes.new(options).annotate!

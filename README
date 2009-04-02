@@ -1,0 +1,9 @@
+Git Changelog - Show a list of changes by version.
+
+    -l, --limit [LIMIT]              Maximum commits for each version, default is 20
+        --no-limit                   Show all commits for each version
+    -a, --all                        Show all versions
+        --from [VERSION]             Start changelog at this version. Defaults to most recent version.
+        --to [VERSION]               End changelog at this version. Defaults to second most recent version.
+    -h, --help                       Displays this help message
+        --version                    Show version

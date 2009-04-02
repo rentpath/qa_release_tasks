@@ -29,6 +29,10 @@ end
 
 task :default => :spec
 
+task :make => :make_spec do
+  system("./bin/git-changelog --help > README")
+end
+
 desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']

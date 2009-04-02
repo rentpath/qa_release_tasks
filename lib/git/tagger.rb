@@ -42,6 +42,14 @@ module Git
       system("git pull")               &&
       response = %x(git merge master)
 
+      unless $?.success?
+        `git reset --hard`
+        error <<-EOS
+        Conflicts when updating the QA branch from master prevented a release from being created.
+        Please resolve these conflicts and then re-run rake qa:release:new.
+        EOS
+      end
+
       unless response.include?("Fast forward") || response.include?('Already up-to-date.')
         warn "There are outstanding changes in qa_branch that may need to be merged into master"
       end

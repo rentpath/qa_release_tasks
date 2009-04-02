@@ -4,3 +4,11 @@ require 'git/commands'
 require 'git/release_notes'
 require 'git/tagger'
 require 'tasks/qa_release'
+
+module QaReleaseTasks
+  VERSION = '0.3.0'
+
+  def self.version
+    VERSION
+  end
+end

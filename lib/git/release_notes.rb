@@ -3,6 +3,11 @@ module Git
     require 'enumerator'
     include CLI
     include Commands
+    
+    def initialize(options = {})
+      @options = options
+      @limit = options[:limit].nil? ? 20 : options[:limit]
+    end
 
     def annotate!
       assert_is_git_repo
@@ -21,11 +26,12 @@ module Git
         range = ''
         range << "refs/tags/#{finish}.." if finish # log until end tag if there is an end tag
         range << "refs/tags/#{start}"
-        log = `git log --no-merges --pretty=format:"%h  %s" #{range}`.strip
+        log = `git log --no-merges --pretty=format:"%h  %s" #{range}`.strip.split("\n")
         next if log.empty?
         puts "#{start}"
         puts "=" * start.length
-        puts log
+        puts @limit ? log[0,@limit] : log
+        puts "         ... and #{log.size - @limit} more." if @limit && log.size > @limit
         puts
       end
     end

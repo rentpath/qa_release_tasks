@@ -20,10 +20,11 @@ spec = Gem::Specification.new do |s|
   s.summary = SUMMARY
   s.description = s.summary
   s.authors = AUTHORS
+  s.executables = ['git-changelog']
   
   s.require_path = 'lib'
   s.autorequire = GEM
-  s.files = %w(LICENSE README.rdoc Rakefile) + Dir.glob("{lib,spec}/**/*")
+  s.files = %w(LICENSE README.rdoc Rakefile) + Dir.glob("{bin,lib,spec}/**/*")
 end
 
 task :default => :spec

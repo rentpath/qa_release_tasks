@@ -2,15 +2,17 @@
 
 Gem::Specification.new do |s|
   s.name = %q{qa_release_tasks}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason Noble", "Rein Henrichs"]
   s.autorequire = %q{qa_release_tasks}
-  s.date = %q{2009-04-01}
+  s.date = %q{2009-04-02}
+  s.default_executable = %q{git-changelog}
   s.description = %q{A gem that provides workflow driven rake tasks for git QA branch management}
+  s.executables = ["git-changelog"]
   s.extra_rdoc_files = ["README.rdoc", "LICENSE"]
-  s.files = ["LICENSE", "README.rdoc", "Rakefile", "lib/cli.rb", "lib/git", "lib/git/commands.rb", "lib/git/release_notes.rb", "lib/git/tagger.rb", "lib/qa_release_tasks.rb", "lib/tasks", "lib/tasks/qa_release.rake", "lib/tasks/qa_release.rb", "spec/qa_release_tasks_spec.rb", "spec/spec_helper.rb"]
+  s.files = ["LICENSE", "README.rdoc", "Rakefile", "bin/git-changelog", "lib/cli.rb", "lib/git", "lib/git/commands.rb", "lib/git/release_notes.rb", "lib/git/tagger.rb", "lib/qa_release_tasks.rb", "lib/tasks", "lib/tasks/qa_release.rake", "lib/tasks/qa_release.rb", "spec/qa_release_tasks_spec.rb", "spec/spec_helper.rb"]
   s.has_rdoc = true
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}

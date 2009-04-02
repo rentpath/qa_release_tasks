@@ -24,7 +24,6 @@ module Git
         end_tag = options[:to] || ask("End at which tag?", tags[start_index + 1] || tags[start_index], tags)
         end_index = tags.index(end_tag) + 1 # include end tag
       end
-      puts
       
       start_index.upto(end_index-1) do |i|
         start = tags[i]

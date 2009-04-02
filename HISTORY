@@ -1,0 +1,22 @@
+v0.4.1
+======
+e6391db  Version bump to v0.4.1
+88af57d  Added -a, --from, --to options.
+f25beaa  Add git-changelog bin to run Git::ReleaseNotes, bump version
+
+v0.2.0
+======
+a17942b  Added git-changelog
+0ca25ba  Added log limit options
+8771063  Updating to 0.3.0
+
+v0.1.1
+======
+c8fe24b  Publishing gem v0.1.1
+e92180d  Adding gitignores for rdoc, swap files, pkg, gem files, validate.rb
+33c6098  Add assert is git repo and check for no tags
+e5c6b73  Adding assert_is_git_repo to commands
+66967ea  Added .gitignore
+5d42fb6  Bumped to 0.2.0
+2b5bbef  Fixing README.rdoc inclusion in Rakefile
+

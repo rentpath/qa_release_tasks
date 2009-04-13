@@ -48,6 +48,8 @@ module Git
         Conflicts when updating the QA branch from master prevented a release from being created.
         Please resolve these conflicts and then re-run rake qa:release:new.
         EOS
+      else
+        system("git push")
       end
 
       unless response.include?("Fast forward") || response.include?('Already up-to-date.')

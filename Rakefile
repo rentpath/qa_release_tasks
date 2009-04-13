@@ -54,3 +54,21 @@ task :make_spec do
     file.puts spec.to_ruby
   end
 end
+
+namespace :gem do
+  desc "validate the gem like github does"
+  task :validate do
+    require 'rubygems/specification'
+    data = File.read("#{GEM}.gemspec")
+    spec = nil
+
+    if data !~ %r{!ruby/object:Gem::Specification}
+      Thread.new { spec = eval("$SAFE = 3\n#{data}") }.join
+    else
+      spec = YAML.load(data)
+    end
+
+    puts spec
+    puts spec.validate ? "OK" : "FAIL"
+  end
+end

@@ -65,8 +65,8 @@ module Git
     
     def verify_update_is_ok
       wrap do
-        ask "This will pull the latest changes from master into the qa_branch. Continue?",
-            answer, /yes|no/i, "You must enter either 'yes' or 'no'"
+        answer = ask "This will pull the latest changes from master into the qa_branch. Continue?",
+            nil, /yes|no/i, "You must enter either 'yes' or 'no'"
         abort "Exiting" unless answer.match(/yes/i)
       end
     end

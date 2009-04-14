@@ -14,14 +14,19 @@ module Git
         assert_on_qa_branch
         assert_no_local_modifications
         update_qa if options[:update]
+        fetch_tags
         tag_next_version(options)
-        git_push_tags
+        push_tags
       ensure
         system 'git checkout qa_branch' unless get_branch == 'qa_branch'
       end
     end
 
     private
+    
+    def fetch_tags
+      system("git fetch --tags")
+    end
 
     def assert_no_local_modifications
       if needs_commit?
@@ -36,10 +41,11 @@ module Git
     end
 
     def update_qa
+      verify_update_is_ok
       system("git checkout master")    &&
-      system("git pull")               &&
+      system("git pull --rebase")      &&
       system("git checkout qa_branch") &&
-      system("git pull")               &&
+      system("git pull --rebase")      &&
       response = %x(git merge master)
 
       unless $?.success?
@@ -56,6 +62,14 @@ module Git
         warn "There are outstanding changes in qa_branch that may need to be merged into master"
       end
     end
+    
+    def verify_update_is_ok
+      wrap do
+        ask "This will pull the latest changes from master into the qa_branch. Continue?",
+            answer, /yes|no/i, "You must enter either 'yes' or 'no'"
+        abort "Exiting" unless answer.match(/yes/i)
+      end
+    end
 
     def tag_next_version(options={})
       tag = next_version(options)
@@ -66,7 +80,7 @@ module Git
       system "git tag #{tag}"
     end
 
-    def git_push_tags
+    def push_tags
       system "git push --tags"
     end
   end

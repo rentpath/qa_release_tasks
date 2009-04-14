@@ -1,15 +1,21 @@
 module CLI
   def warn(message)
-    STDERR.puts "*" * 50
-    STDERR.puts "Warning: #{message}"
-    STDERR.puts "*" * 50
+    wrap(STDERR){ STDERR.puts "Warning: #{message}" }
   end
 
   def error(message)
-    STDERR.puts "*" * 50
-    STDERR.puts "Error: #{message}"
-    STDERR.puts "*" * 50
+    wrap(STDERR){ STDERR.puts "Error: #{message}" }
     exit 1
+  end
+  
+  def stars(num=50)
+    return "*" * num
+  end
+  
+  def wrap(stream=STDOUT)
+    stream.puts stars
+    yield
+    stream.puts stars
   end
 
   def ask(question, default=nil, valid_response=nil, invalid_message=nil)

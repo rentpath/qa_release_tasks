@@ -7,7 +7,6 @@ module Git
     attr_reader :options
     def initialize(options = {})
       @options = options
-      @limit = options[:limit].nil? ? 20 : options[:limit]
     end
 
     def annotate!
@@ -35,8 +34,7 @@ module Git
         next if log.empty?
         puts "#{start}"
         puts "=" * start.length
-        puts @limit ? log[0,@limit] : log
-        puts "         ... and #{log.size - @limit} more." if @limit && log.size > @limit
+        puts log
         puts
       end
     end

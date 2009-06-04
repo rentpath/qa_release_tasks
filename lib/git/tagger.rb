@@ -77,7 +77,7 @@ module Git
         invalid_message = "Invalid version. Version must be in the format: \"v1.2.3\""
         tag = ask "Name of new version tag ", tag, valid_version_regexp, invalid_message
       end
-      system "git tag #{tag}"
+      system "git tag -am'Tagged by qa_release_tasks gem' #{tag}"
     end
 
     def push_tags

@@ -6,7 +6,7 @@ require 'git/tagger'
 require 'tasks/qa_release'
 
 module QaReleaseTasks
-  VERSION = '0.5.3'
+  VERSION = '1.0.0'
 
   def self.version
     VERSION

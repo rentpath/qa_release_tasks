@@ -12,7 +12,7 @@ module Git
       assert_is_git_repo
       begin
         assert_on_qa_branch
-        assert_no_local_modifications
+        system "git status"
         update_qa if options[:update]
         fetch_tags
         tag_next_version(options)
@@ -26,12 +26,6 @@ module Git
     
     def fetch_tags
       system("git fetch --tags")
-    end
-
-    def assert_no_local_modifications
-      if needs_commit?
-        error "You have local modifications.  Use git commit or git stash to fix that."
-      end
     end
 
     def assert_on_qa_branch

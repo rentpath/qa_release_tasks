@@ -51,24 +51,5 @@ module Git
 
       'v' + [major, minor, point].join('.')
     end
-
-    #  based on 'git status' output, does this repo contain changes that need to be committed?
-    #  optional second argument is a specific file (or directory) in the repo.
-    def needs_commit?(dir = Dir.pwd, file = nil)
-      rval = false
-      Dir.chdir(dir) do
-        status = %x{git status}
-        if file.nil?
-          rval = true unless status =~ /nothing to commit \(working directory clean\)|nothing added to commit but untracked files present/
-          if status =~ /nothing added to commit but untracked files present/
-            warn "untracked files present in #{dir}"
-            show_changed_files(status)
-          end
-        else
-          rval = true if status =~ /^#\t.*modified:   #{file}/
-        end
-      end
-      rval
-    end
   end
 end

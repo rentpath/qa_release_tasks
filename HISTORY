@@ -1,6 +1,11 @@
+v1.1.0
+======
+28158b9  Removed merging functionality, now we only do the tagging stuff
+         *NOT BACKWARDS COMPATIBLE*
+
 v1.0.1
 ======
-        Removed difference check
+         Removed difference check
 
 v1.0.0
 ======
@@ -24,7 +29,7 @@ c8fe24b  Publishing gem v0.1.1
 e92180d  Adding gitignores for rdoc, swap files, pkg, gem files, validate.rb
 33c6098  Add assert is git repo and check for no tags
 e5c6b73  Adding assert_is_git_repo to commands
-66967ea  Added .gitignore
+66967ea  Added .gitignores
 5d42fb6  Bumped to 0.2.0
 2b5bbef  Fixing README.rdoc inclusion in Rakefile
 

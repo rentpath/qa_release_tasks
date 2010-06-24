@@ -3,6 +3,8 @@ module Git
     require 'enumerator'
     include CLI
     include Commands
+    require 'pivotal-tracker'
+    require 'yaml'
     
     attr_reader :options
     def initialize(options = {})
@@ -11,6 +13,7 @@ module Git
 
     def annotate!
       assert_is_git_repo
+      initialize_pivotal
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
       
@@ -30,10 +33,64 @@ module Git
       range << "refs/tags/#{finish}.." if finish # log until end tag if there is an end tag
       range << "refs/tags/#{start}"
       log = `git log --no-merges --pretty=format:"%h  %s" #{range}`.strip.split("\n")
-      puts "#{start}"
-      puts "=" * start.length
-      puts log
+      project_name = `pwd`.chomp.split('/').last
+      # stories = { 12345 => { 'abc123' => "foo", 'def343' => "bar" } }
+      stories = Hash.new{|hash, key| hash[key] = {}}
+      log.each do |log_line|
+        # (commit, pair, pivotal, subject) = log_line.split(/\s+/, 4)
+        #[(.+?)]\s*[(\d+)](.+)
+        (match, commit, pair, pivotal, subject) = *log_line.match(/(.+?)  \[(.*)\]\s*\[\#?(\d+)\](.*)/)
+        stories[pivotal.to_i][commit] = { :pair => pair, :message => subject.strip } if match
+      end
+      
+      table_start
+      Struct.new("UnknownStory", :id, :name, :story_type, :url)
+      stories.each do |story_id, commits|
+        story = @pivotal.stories.find(story_id) || Struct::UnknownStory.new(story_id, 'No Pivotal Story Available', 'Unknown', nil)
+
+        row = "|-\n| "
+        row += story.url ? "[#{story.url} #{story.id}]" : "#{story.id}"
+        row += "\n| #{story.name}\n| #{story.story_type.capitalize}\n|\n{|\n"
+        commits.each do |commit, details|
+          row += "|-\n| [http://github.com/primedia/#{project_name}/commit/#{commit} #{commit}]\n| #{details[:pair]}\n| #{details[:message]}\n"
+        end
+        row += "|}"
+        
+        puts row
+      end
+      table_end
       puts
+    end
+    
+    private
+    
+    def initialize_pivotal
+      if File.exists?('config/pivotal.yml')
+        config = YAML.load_file("config/pivotal.yml")
+      end
+      if !File.exists?('config/pivotal.yml') || config.nil? || config['token'].nil? || config['project'].nil?
+        puts "You need to create config/pivotal.yml with the following contents:"
+        puts "\ttoken: _____PIVOTAL TOKEN ID____________"
+        puts "\tproject: _______ PIVOTAL PROJECT ID _______"
+        exit
+      end
+      
+      PivotalTracker::Client.token = config['token']
+      @pivotal = PivotalTracker::Project.find(config['project'])
+    end
+    def table_start
+      puts <<'EOF'
+{| border="1"
+|+Release Contents
+! Pivotal #
+! User Story
+! Story Type
+! Git Commits
+|-
+EOF
+    end
+    def table_end
+      puts "|}"
     end
   end
 end

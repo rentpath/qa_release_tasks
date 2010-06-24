@@ -3,6 +3,7 @@ require 'cli'
 require 'git/commands'
 require 'git/release_notes'
 require 'git/tagger'
+require 'git/wiki'
 require 'tasks/qa_release'
 
 module QaReleaseTasks

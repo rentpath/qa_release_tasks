@@ -39,8 +39,17 @@ module Git
       log.each do |log_line|
         # (commit, pair, pivotal, subject) = log_line.split(/\s+/, 4)
         #[(.+?)]\s*[(\d+)](.+)
-        (match, commit, pair, pivotal, subject) = *log_line.match(/(.+?)  \[(.*)\]\s*\[\#?(\d+)\](.*)/)
-        stories[pivotal.to_i][commit] = { :pair => pair, :message => subject.strip } if match
+        (match, commit, pair, pivotal, subject) = *log_line.match(/(.+?)\s*\[([a-zA-Z\/]{2,})\]\s*\[\#?([\d\/]+)\](.*)/)
+        if match
+          if commit.gsub!(/\s*Revert.*/, '')
+            subject = subject + ' [REVERT]'
+          end
+          pivotal.split('/').each do |p|
+            stories[p.to_i][commit] = { :pair => pair, :message => subject.gsub("\"", '').strip } if match
+          end
+        else
+          stories[0][log_line] = {:pair => '', :message => log_line}
+        end
       end
       
       table_start

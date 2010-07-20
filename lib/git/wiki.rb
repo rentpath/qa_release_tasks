@@ -45,12 +45,28 @@ module Git
             subject = subject + ' [REVERT]'
           end
           pivotal.split('/').each do |p|
-            stories[p.to_i][commit] = { :pair => pair, :message => subject.gsub("\"", '').strip } if match
+            stories[p.to_i][commit] = { :pair => pair, :message => subject.gsub("\"", '').strip }
           end
         else
           stories[0][log_line] = {:pair => '', :message => log_line}
         end
       end
+      deploy_log = `git log --no-merges --pretty=format:"%h  %s" #{range} config Capfile`.strip.split("\n")
+      project_name = `pwd`.chomp.split('/').last
+      deploy_log.each do |log_line|
+        # (commit, pair, pivotal, subject) = log_line.split(/\s+/, 4)
+        #[(.+?)]\s*[(\d+)](.+)
+        (match, commit, pair, pivotal, subject) = *log_line.match(/(.+?)\s*\[([a-zA-Z\/]{2,})\]\s*\[\#?([\d\/]+)\](.*)/)
+        if match
+          commit.gsub!(/\s*Revert.*/, '')
+          pivotal.split('/').each do |p|
+            stories[p.to_i][commit].merge!({:red => true})
+          end
+        else
+          stories[0][commit].merge!({:red => true})
+        end
+      end
+      
       
       table_start
       Struct.new("UnknownStory", :id, :name, :story_type, :url)
@@ -61,7 +77,7 @@ module Git
         row += story.url ? "[#{story.url} #{story.id}]" : "#{story.id}"
         row += "\n| #{story.name}\n| #{story.story_type.capitalize}\n|\n{|\n"
         commits.each do |commit, details|
-          row += "|-\n| [http://github.com/primedia/#{project_name}/commit/#{commit} #{commit}]\n| #{details[:pair]}\n| #{details[:message]}\n"
+          row += "|-#{'style="background-color:#ffcccc;"' if details[:red]}\n| [http://github.com/primedia/#{project_name}/commit/#{commit} #{commit}]\n| #{details[:pair]}\n| #{details[:message]}\n"
         end
         row += "|}"
         

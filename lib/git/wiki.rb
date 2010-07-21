@@ -63,7 +63,7 @@ module Git
             stories[p.to_i][commit].merge!({:red => true})
           end
         else
-          stories[0][commit].merge!({:red => true})
+          stories[0][log_line].merge!({:red => true})
         end
       end
       

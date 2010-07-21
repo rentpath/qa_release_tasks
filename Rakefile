@@ -25,6 +25,7 @@ spec = Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.autorequire = GEM
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,lib,spec}/**/*")
+  s.add_dependency('pivotal-tracker')
   s.homepage = ""
 end
 

@@ -99,7 +99,7 @@ module Git
         puts "\tproject: _______ PIVOTAL PROJECT ID _______"
         exit
       end
-      
+      PivotalTracker::Client.use_ssl = true
       PivotalTracker::Client.token = config['token']
       @pivotal = PivotalTracker::Project.find(config['project'])
     end

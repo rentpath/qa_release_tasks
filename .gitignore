@@ -3,3 +3,4 @@ doc/
 validate.rb
 *.gem
 pkg/
+.rvmrc

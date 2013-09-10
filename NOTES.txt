@@ -10,7 +10,8 @@ So use the next-to-last version which doesn't have that weird dependency:
 $ gem install mediawiki-gateway -v 0.5.1
 
 Has a pretty easy api to create and edit pages
-(but don't try this as-is since it will change the AG release page and create a new page; our wiki is configured such that pages can't be deleted):
+(but don't try this as-is since it will change the AG release page and create a new page;
+also our wiki is configured such that pages can't be deleted):
 
   require 'media_wiki'
 
@@ -28,7 +29,7 @@ Has a pretty easy api to create and edit pages
 
 After reviewing qa_release_tasks gem, my plan is as follows:
 
-Extend qa:release:wiki task such that after its current behavior of
+Extend qa:release:wiki task such that in addition to its current behavior of
 prompting for start and end tag, it also prompts for:
 - Wiki username
 - Wiki password
@@ -44,10 +45,10 @@ Once all input has been collected:
 - create new page
   - generate content for new page
   - add new page to wiki
-  - print to stdout: "Created new release page: url"
+  - print to stdout: "Created new release page: URL"
 - add link to index page
   - get current page content
   - generate wiki link markup for new page
   - if a list exists, insert link as new first list item
   - else insert link at top of content
-  - print to stdout: "Updated release listing page: url"
+  - print to stdout: "Updated release listing page: URL"

@@ -1,8 +1,10 @@
 module Git
   class Wiki
+    require 'date'
     require 'enumerator'
     include CLI
     include Commands
+    require 'media_wiki'
     require 'pivotal-tracker'
     require 'yaml'
 
@@ -10,13 +12,27 @@ module Git
     def initialize(options = {})
       puts "*** WIP qa_release_tasks gem ***"
       @options = options
+      @wiki_config = {
+        api_url: 'http://wiki/api.php',
+        auth_domain: 'PRM',
+        release_list: nil
+      }
       assert_is_git_repo
       initialize_pivotal
+      initialize_wiki_config
+      @wiki = MediaWiki::Gateway.new(@wiki_config[:api_url])
     end
 
     def annotate!
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
+
+      username = options[:username] || ask("Wiki username?")
+      password = options[:password] || ask("Wiki password?")
+      @wiki.login(username, password, @wiki_config[:auth_domain])
+      assert_wiki_release_list_page_exists
+
+      release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
 
       if options[:all]
         start_index = 0
@@ -30,7 +46,9 @@ module Git
 
       start = tags[start_index]
       finish = tags[end_index]
-      puts release_details_table(start, finish)
+      release_details = release_details_table(start, finish)
+      # FIXME: generate new release page content, create page, and add link to release listing page
+      puts release_details
     end
 
     def release_details_table(start, finish)
@@ -106,6 +124,22 @@ module Git
       PivotalTracker::Client.token = config['token']
       @pivotal = PivotalTracker::Project.find(config['project'])
     end
+
+    def initialize_wiki_config
+      release_list = nil
+      if File.exists?('config/wiki.yml')
+        config = YAML.load_file("config/wiki.yml")
+        release_list = config['release_list']
+      end
+      unless release_list
+        puts "You need to create config/wiki.yml with the following contents:"
+        puts "\trelease_list: _____WIKI RELEASE LIST PAGE______"
+        puts "\nFor example:\n\trelease_list: IDG/Releases/Web/ApartmentGuide"
+        exit
+      end
+      @wiki_config[:release_list] = release_list
+    end
+
     def table_start
       <<'EOF'
 {| border="1"
@@ -117,8 +151,22 @@ module Git
 |-
 EOF
     end
+
     def table_end
       "|}"
     end
+
+    def wiki_release_list_page
+      @wiki_config[:release_list]
+    end
+
+    def wiki_release_list_page_content
+      @wiki.get(@wiki_config[:release_list])
+    end
+
+    def assert_wiki_release_list_page_exists
+      error "Release listing wiki page doesn't exist: #{wiki_release_list_page}" unless wiki_release_list_page_content
+    end
+
   end
 end

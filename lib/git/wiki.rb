@@ -8,12 +8,13 @@ module Git
 
     attr_reader :options
     def initialize(options = {})
+      puts "*** WIP qa_release_tasks gem ***"
       @options = options
+      assert_is_git_repo
+      initialize_pivotal
     end
 
     def annotate!
-      assert_is_git_repo
-      initialize_pivotal
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
 
@@ -29,6 +30,10 @@ module Git
 
       start = tags[start_index]
       finish = tags[end_index]
+      puts release_details_table(start, finish)
+    end
+
+    def release_details_table(start, finish)
       range = ''
       range << "refs/tags/#{finish}.." if finish # log until end tag if there is an end tag
       range << "refs/tags/#{start}"
@@ -67,8 +72,7 @@ module Git
         end
       end
 
-
-      table_start
+      result = table_start
       Struct.new("UnknownStory", :id, :name, :story_type, :url)
       stories.each do |story_id, commits|
         story = @pivotal.stories.find(story_id) || Struct::UnknownStory.new(story_id, 'No Pivotal Story Available', 'Unknown', nil)
@@ -79,12 +83,11 @@ module Git
         commits.each do |commit, details|
           row += "|-#{'style="background-color:#ffcccc;"' if details[:red]}\n| [http://github.com/primedia/#{project_name}/commit/#{commit} #{commit}]\n| #{details[:pair]}\n| #{details[:message]}\n"
         end
-        row += "|}"
+        row += "|}\n"
 
-        puts row
+        result << row
       end
-      table_end
-      puts
+      result << table_end
     end
 
     private
@@ -104,7 +107,7 @@ module Git
       @pivotal = PivotalTracker::Project.find(config['project'])
     end
     def table_start
-      puts <<'EOF'
+      <<'EOF'
 {| border="1"
 |+Release Contents
 ! Pivotal #
@@ -115,7 +118,7 @@ module Git
 EOF
     end
     def table_end
-      puts "|}"
+      "|}"
     end
   end
 end

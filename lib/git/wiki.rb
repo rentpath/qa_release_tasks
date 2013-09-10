@@ -5,7 +5,7 @@ module Git
     include Commands
     require 'pivotal-tracker'
     require 'yaml'
-    
+
     attr_reader :options
     def initialize(options = {})
       @options = options
@@ -16,17 +16,17 @@ module Git
       initialize_pivotal
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
-      
+
       if options[:all]
         start_index = 0
         end_index = tags.length - 1
       else
         start_tag = options[:from] || ask("Start at which tag?", tags[0], tags)
-        start_index = tags.index(start_tag)   
+        start_index = tags.index(start_tag)
         end_tag = options[:to] || ask("End at which tag?", tags[start_index + 1] || tags[start_index], tags)
         end_index = tags.index(end_tag) # include end tag
       end
-      
+
       start = tags[start_index]
       finish = tags[end_index]
       range = ''
@@ -66,8 +66,8 @@ module Git
           stories[0][log_line].merge!({:red => true})
         end
       end
-      
-      
+
+
       table_start
       Struct.new("UnknownStory", :id, :name, :story_type, :url)
       stories.each do |story_id, commits|
@@ -80,15 +80,15 @@ module Git
           row += "|-#{'style="background-color:#ffcccc;"' if details[:red]}\n| [http://github.com/primedia/#{project_name}/commit/#{commit} #{commit}]\n| #{details[:pair]}\n| #{details[:message]}\n"
         end
         row += "|}"
-        
+
         puts row
       end
       table_end
       puts
     end
-    
+
     private
-    
+
     def initialize_pivotal
       if File.exists?('config/pivotal.yml')
         config = YAML.load_file("config/pivotal.yml")

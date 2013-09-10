@@ -4,7 +4,7 @@ require 'rubygems/specification'
 require 'date'
 require 'spec/rake/spectask'
 
-require 'lib/qa_release_tasks'
+require './lib/qa_release_tasks'
 
 GEM = "qa_release_tasks"
 GEM_VERSION = QaReleaseTasks.version

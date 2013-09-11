@@ -12,15 +12,9 @@ module Git
     def initialize(options = {})
       puts "*** WIP qa_release_tasks gem ***"
       @options = options
-      @wiki_config = {
-        api_url: 'http://wiki/api.php',
-        auth_domain: 'PRM',
-        release_list: nil
-      }
       assert_is_git_repo
       initialize_pivotal
-      initialize_wiki_config
-      @wiki = MediaWiki::Gateway.new(@wiki_config[:api_url])
+      initialize_wiki
     end
 
     def annotate!
@@ -137,7 +131,12 @@ module Git
         puts "\nFor example:\n\trelease_list: IDG/Releases/Web/ApartmentGuide"
         exit
       end
-      @wiki_config[:release_list] = release_list
+      @wiki_config = {
+        api_url: 'http://wiki/api.php',
+        auth_domain: 'PRM',
+        release_list: release_list
+      }
+      @wiki = MediaWiki::Gateway.new(@wiki_config[:api_url])
     end
 
     def table_start

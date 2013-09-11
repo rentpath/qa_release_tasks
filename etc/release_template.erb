@@ -1,0 +1,95 @@
+[[<%= @release_list %>]]
+
+=<%= @dotted_date %>=
+
+{| border="1"
+|+Release Details
+|-
+| align="right" | '''Scheduled Release Deployment Time:''' || 10 pm
+|-
+| align="right" | '''Version Control URLs to Release Tags:''' || <%= @release_version %>
+|-
+| align="right" | '''Ticket #:''' || 
+|-
+| align="right" | '''Interactive Calendar Entry:''' || 
+|-
+| align="right" | '''Stakeholder Approval Signature(s):''' || 
+|-
+| align="right" | '''QA Approval:''' || 
+|-
+| align="right" | '''SEO Approval:''' || 
+|-
+| align="right" | '''Regression Results:''' || 
+|-
+| align="right" | '''SauceLabs Results:''' || 
+|-
+| align="right" | '''Screaming Frog Results:''' || 
+|}
+
+
+== Item to discuss==
+Items to be discussed are as follows:
+*Configuration - No
+*Database/Endeca - No
+*Environment - No
+*Papi - No
+*Metasaurus - No
+*Leads - No
+*Text to cell - No
+*Zutron - No
+
+== Release Plan ==
+This section contains the steps to execute this deployment listed in chronological order.  The tasks for all cross-functional groups (Development, Data, QA, Network Operations) are listed here, so as to reinforce the idea that tight collaboration and communication are key to successful deployments.
+
+{| border="1"
+|+Release Plan
+! Time
+! Responsible Party
+! Task Description
+|-
+|-
+| 10:00 PM
+| Infra
+|
+# Deploy tag to production in Atlanta
+|-
+| 10:30 PM
+| QA
+|
+# Verify Code
+# Verify CP
+|-
+| 11:00 PM
+| Infra
+|
+# Make sure you have fetched the latest changes by running 'git fetch origin'
+# Make sure you have all tags localy by running 'git fetch --tags'
+# Please deploy from qa branch
+# Deploy tag to production in Dallas
+# Notify Q/A team of completed deployment for testing.
+|-
+| 11:30 PM
+| QA
+|
+# Verify Code
+# Verify CP
+|-
+|}
+
+
+== Release Details ==
+This section catalogs the user stories whose functionality is being introduced to the production version of the application with this release.
+
+FIXME: [https://github.com/primedia/m.apartmentguide/compare/v1.32.9...v1.32.16 Diff between tag v1.32.9...v1.32.16]
+
+<%= %release_details %>
+
+
+== Post Release Tasks ==
+{| border="1"
+|+Post Release Details
+|-
+| align="right" | '''Post Release Cube Checklist Check:''' || <INITIALS OF WHO CHECKED>
+|-
+| align="right" | '''Critical Path Checklists''' || 
+|}

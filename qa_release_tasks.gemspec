@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason Noble", "Rein Henrichs"]
   s.autorequire = "qa_release_tasks"
-  s.date = "2013-09-23"
+  s.date = "2013-10-08"
   s.description = "A gem that provides workflow driven rake tasks for git QA branch management"
   s.executables = ["git-changelog"]
   s.extra_rdoc_files = ["README", "LICENSE"]

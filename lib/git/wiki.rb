@@ -1,6 +1,7 @@
 module Git
   class Wiki
     require 'date'
+    require 'erb'
     require 'enumerator'
     include CLI
     include Commands
@@ -10,7 +11,6 @@ module Git
 
     attr_reader :options
     def initialize(options = {})
-      puts "*** WIP qa_release_tasks gem ***"
       @options = options
       assert_is_git_repo
       initialize_pivotal
@@ -38,11 +38,37 @@ module Git
         end_index = tags.index(end_tag) # include end tag
       end
 
-      start = tags[start_index]
-      finish = tags[end_index]
-      release_details = release_details_table(start, finish)
+      @release_version = tags[start_index]
+      @prior_version = tags[end_index]
+      @release_details = release_details_table(@release_version, @prior_version)
+
       # FIXME: generate new release page content, create page, and add link to release listing page
-      puts release_details
+      #puts @release_details
+
+      @release_list = @wiki_config[:release_list]
+      @dotted_date = dotted_date(release_date)
+
+      release_page_content = render_template
+      puts release_page_content
+    end
+
+    def render_template
+      template.result(binding)
+    end
+
+    def template
+      filename = template_filename
+      erb = ERB.new(File.read(filename))
+      erb.filename = filename
+      erb
+    end
+
+    def template_filename
+      "#{File.dirname(__FILE__)}/../../etc/release_template.erb"
+    end
+
+    def dotted_date(date)
+      date.strftime('%Y.%m.%d')
     end
 
     def release_details_table(start, finish)
@@ -119,7 +145,7 @@ module Git
       @pivotal = PivotalTracker::Project.find(config['project'])
     end
 
-    def initialize_wiki_config
+    def initialize_wiki
       release_list = nil
       if File.exists?('config/wiki.yml')
         config = YAML.load_file("config/wiki.yml")

@@ -21,12 +21,21 @@ module Git
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
 
+      @release_list = @wiki_config[:release_list]
       username = options[:username] || ask("Wiki username?")
+      system "stty -echo"
       password = options[:password] || ask("Wiki password?")
+      system "stty echo"
+      puts
       @wiki.login(username, password, @wiki_config[:auth_domain])
       assert_wiki_release_list_page_exists
 
       release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
+
+      release_page_id = wiki_full_release_page_id(@release_list, release_date)
+      if wiki_page_exists?(release_page_id)
+        exit 1 if ask("Release page #{release_page_id} already exists.  Overwrite? [yn]", default=nil, valid_response=['y', 'n']) == 'n'
+      end
 
       if options[:all]
         start_index = 0
@@ -41,15 +50,10 @@ module Git
       @release_version = tags[start_index]
       @prior_version = tags[end_index]
       @release_details = release_details_table(@release_version, @prior_version)
-
-      # FIXME: generate new release page content, create page, and add link to release listing page
-      #puts @release_details
-
-      @release_list = @wiki_config[:release_list]
       @dotted_date = dotted_date(release_date)
 
       release_page_content = render_template
-      puts release_page_content
+      update_wiki(release_page_content, @release_list, release_date)
     end
 
     def render_template
@@ -69,6 +73,10 @@ module Git
 
     def dotted_date(date)
       date.strftime('%Y.%m.%d')
+    end
+
+    def us_slash_date(date)
+      date.strftime('%m/%d/%Y')
     end
 
     def release_details_table(start, finish)
@@ -128,6 +136,41 @@ module Git
       result << table_end
     end
 
+    def update_wiki(release_page_content, release_list, release_date)
+      release_page_id = wiki_full_release_page_id(release_list, release_date)
+      wiki_page_edit!(release_page_id, release_page_content)
+      puts "Wrote release page: #{wiki_view_url(release_page_id)}"
+      list_content = wiki_page_content(release_list)
+      insert_link_in_list_content!(list_content, release_page_id, release_date)
+      wiki_page_edit!(release_list, list_content)
+      puts "Updated list page:  #{wiki_view_url(release_list)}"
+    end
+
+    def wiki_full_release_page_id(release_list, release_date)
+      date_id = wiki_id_date(release_date)
+      wiki_full_page_id(release_list, date_id)
+    end
+
+    def wiki_id_date(date)
+      date.strftime('%Y%m%d')
+    end
+
+    def wiki_full_page_id(release_list, date_id)
+      "#{release_list}/#{date_id}"
+    end
+
+    def wiki_view_url(path=nil)
+      url = @wiki_config[:view_url]
+      url = "#{url}/#{path}" if path
+      url
+    end
+
+    def insert_link_in_list_content!(content, release_page_id, release_date)
+      link_markup = "*[[#{release_page_id} |#{us_slash_date(release_date)}]]\n"
+      insertion_index = content.index(/^\*/) or 0
+      content.insert(insertion_index, link_markup)
+    end
+
     private
 
     def initialize_pivotal
@@ -159,6 +202,7 @@ module Git
       end
       @wiki_config = {
         api_url: 'http://wiki/api.php',
+        view_url: 'http://wiki/index.php',
         auth_domain: 'PRM',
         release_list: release_list
       }
@@ -185,12 +229,20 @@ EOF
       @wiki_config[:release_list]
     end
 
-    def wiki_release_list_page_content
-      @wiki.get(@wiki_config[:release_list])
+    def wiki_page_exists?(path)
+      ! wiki_page_content(path).nil?
+    end
+
+    def wiki_page_content(path)
+      @wiki.get(path)
+    end
+
+    def wiki_page_edit!(path, content)
+      @wiki.edit(path, content)
     end
 
     def assert_wiki_release_list_page_exists
-      error "Release listing wiki page doesn't exist: #{wiki_release_list_page}" unless wiki_release_list_page_content
+      error "Release listing wiki page doesn't exist: #{wiki_release_list_page}" unless wiki_page_exists?(wiki_release_list_page)
     end
 
   end

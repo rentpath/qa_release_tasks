@@ -17,24 +17,26 @@ module Git
       initialize_wiki
     end
 
-    def annotate!
+    def annotate!(update_wiki_flag=false)
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
 
-      @release_list = @wiki_config[:release_list]
-      username = options[:username] || ask("Wiki username?")
-      system "stty -echo"
-      password = options[:password] || ask("Wiki password?")
-      system "stty echo"
-      puts
-      @wiki.login(username, password, @wiki_config[:auth_domain])
-      assert_wiki_release_list_page_exists
+      if update_wiki_flag
+        @release_list = @wiki_config[:release_list]
+        username = options[:username] || ask("Wiki username?")
+        system "stty -echo"
+        password = options[:password] || ask("Wiki password?")
+        system "stty echo"
+        puts
+        @wiki.login(username, password, @wiki_config[:auth_domain])
+        assert_wiki_release_list_page_exists
 
-      release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
+        release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
 
-      release_page_id = wiki_full_release_page_id(@release_list, release_date)
-      if wiki_page_exists?(release_page_id)
-        exit 1 if ask("Release page #{release_page_id} already exists.  Overwrite? [yn]", default=nil, valid_response=['y', 'n']) == 'n'
+        release_page_id = wiki_full_release_page_id(@release_list, release_date)
+        if wiki_page_exists?(release_page_id)
+          exit 1 if ask("Release page #{release_page_id} already exists.  Overwrite? [yn]", default=nil, valid_response=['y', 'n']) == 'n'
+        end
       end
 
       if options[:all]
@@ -50,10 +52,14 @@ module Git
       @release_version = tags[start_index]
       @prior_version = tags[end_index]
       @release_details = release_details_table(@release_version, @prior_version)
-      @dotted_date = dotted_date(release_date)
 
-      release_page_content = render_template
-      update_wiki(release_page_content, @release_list, release_date)
+      if update_wiki_flag
+        @dotted_date = dotted_date(release_date)
+        release_page_content = render_template
+        update_wiki(release_page_content, @release_list, release_date)
+      else
+        puts @release_details
+      end
     end
 
     def render_template

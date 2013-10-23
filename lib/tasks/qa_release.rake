@@ -15,9 +15,14 @@ namespace :qa do
       Git::ReleaseNotes.new.annotate!
     end
 
-    desc "Add release notes for a given tag in wiki format"
+    desc "Generate release notes for a given tag in wiki format"
     task :wiki do
       Git::Wiki.new.annotate!
+    end
+
+    desc "Update the wiki with release notes for a given tag"
+    task :wiki_update do
+      Git::Wiki.new.annotate!(true)
     end
   end
 end

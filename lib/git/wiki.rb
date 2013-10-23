@@ -18,7 +18,7 @@ module Git
     end
 
     def annotate!(update_wiki_flag=false)
-      tags = get_tags.reverse
+      tags = get_tag_options
       error "No version tags available." if tags.empty?
 
       if update_wiki_flag
@@ -60,6 +60,10 @@ module Git
       else
         puts @release_details
       end
+    end
+
+    def get_tag_options
+      get_tags.reverse
     end
 
     def render_template

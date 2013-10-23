@@ -8,7 +8,24 @@ module QA
     set :views,  "#{dir}/server/views"
 
     get '/wiki' do
-      "Hello World"
+      gitwiki = Git::Wiki.new
+      @username = ''
+      @password = ''
+      @date = Date.today.strftime
+      @tags = gitwiki.get_tag_options
+      @starttag = default_starttag
+      @endtag = default_endtag
+      erb :wiki_form
+    end
+
+    private
+
+    def default_starttag
+      @tags[0]
+    end
+
+    def default_endtag
+      @tags[1]
     end
 
   end

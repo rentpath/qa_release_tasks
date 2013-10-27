@@ -1,12 +1,20 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (3.2.14)
+      i18n (~> 0.6, >= 0.6.4)
+      multi_json (~> 1.0)
     builder (3.2.0)
     crack (0.3.2)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
+    i18n (0.6.5)
     libxml-ruby (2.6.0)
+    mediawiki-gateway (0.5.1)
+      activesupport
+      rest-client (>= 1.3.0)
     mime-types (1.22)
+    multi_json (1.7.7)
     nokogiri (1.5.9)
     nokogiri-happymapper (0.5.6)
       nokogiri (~> 1.5)
@@ -20,15 +28,28 @@ GEM
       nokogiri-happymapper (>= 0.5.4)
       rest-client (~> 1.6.0)
       rest-client (~> 1.6.0)
+    rack (1.5.2)
+    rack-protection (1.5.0)
+      rack
     rake (0.8.7)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (1.3.0)
+    sinatra (1.3.6)
+      rack (~> 1.4)
+      rack-protection (~> 1.3)
+      tilt (~> 1.3, >= 1.3.3)
+    sinatra-respond_to (0.9.0)
+      sinatra (~> 1.3)
+    tilt (1.4.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  mediawiki-gateway (= 0.5.1)
   pivotal-tracker
   rake (= 0.8.7)
   rspec (= 1.3.0)
+  sinatra (~> 1.3.6)
+  sinatra-respond_to

@@ -1,0 +1,32 @@
+<h1>Generate QA Release Wiki</h1>
+<form method="POST">
+  <div class="field">
+    <label for="username">Wiki username:</label>
+    <input type="text" id="username" name="username" value="<%= @username %>">
+  </div>
+  <div class="field">
+    <label for="password">Wiki password:</label>
+    <input type="password" id="password" name="password" value="<%= @password %>">
+  </div>
+  <div class="field">
+    <label for="date">Release date:</label>
+    <input type="text" id="date" name="date" value="<%= @date %>">
+  </div>
+  <div class="field">
+    <label for="starttag">Start tag (QA):</label>
+    <select id="starttag" name="starttag">
+      <% @tags.each do |tag| %>
+        <option <%= tag == @starttag ? 'selected' : '' %>><%= tag %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="field">
+    <label for="endtag">End tag (prod):</label>
+    <select id="endtag" name="endtag">
+      <% @tags.each do |tag| %>
+        <option <%= tag == @endtag ? 'selected' : '' %>><%= tag %></option>
+      <% end %>
+    </select>
+  </div>
+  <input type="submit" name="submit" value="Submit">
+</form>

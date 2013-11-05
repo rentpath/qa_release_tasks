@@ -7,7 +7,7 @@ require 'git/wiki'
 require 'tasks/qa_release'
 
 module QaReleaseTasks
-  VERSION = '1.4.0a'
+  VERSION = '1.3.5'
 
   def self.version
     VERSION

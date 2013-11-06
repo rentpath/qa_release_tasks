@@ -21,23 +21,7 @@ module Git
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
 
-      if update_wiki_flag
-        @release_list = @wiki_config[:release_list]
-        username = options[:username] || ask("Wiki username?")
-        system "stty -echo"
-        password = options[:password] || ask("Wiki password?")
-        system "stty echo"
-        puts
-        @wiki.login(username, password, @wiki_config[:auth_domain])
-        assert_wiki_release_list_page_exists
-
-        release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
-
-        release_page_id = wiki_full_release_page_id(@release_list, release_date)
-        if wiki_page_exists?(release_page_id)
-          exit 1 if ask("Release page #{release_page_id} already exists.  Overwrite? [yn]", default=nil, valid_response=['y', 'n']) == 'n'
-        end
-      end
+      collect_wiki_inputs if update_wiki_flag
 
       if options[:all]
         start_index = 0
@@ -54,12 +38,28 @@ module Git
       @release_details = release_details_table(@release_version, @prior_version)
 
       if update_wiki_flag
-        @dotted_date = dotted_date(release_date)
-        release_page_content = render_template
-        update_wiki(release_page_content, @release_list, release_date)
+        update_wiki
       else
         puts @release_details
       end
+    end
+
+    def collect_wiki_inputs
+        @release_list = @wiki_config[:release_list]
+        username = options[:username] || ask("Wiki username?")
+        system "stty -echo"
+        password = options[:password] || ask("Wiki password?")
+        system "stty echo"
+        puts
+        @wiki.login(username, password, @wiki_config[:auth_domain])
+        assert_wiki_release_list_page_exists
+
+        @release_date = options[:date] || Date.parse(ask("Release date?", Date.today.strftime))
+
+        release_page_id = wiki_full_release_page_id(@release_list, @release_date)
+        if wiki_page_exists?(release_page_id)
+          exit 1 if ask("Release page #{release_page_id} already exists.  Overwrite? [yn]", default=nil, valid_response=['y', 'n']) == 'n'
+        end
     end
 
     def render_template
@@ -142,14 +142,16 @@ module Git
       result << table_end
     end
 
-    def update_wiki(release_page_content, release_list, release_date)
-      release_page_id = wiki_full_release_page_id(release_list, release_date)
+    def update_wiki
+      @dotted_date = dotted_date(@release_date)
+      release_page_content = render_template
+      release_page_id = wiki_full_release_page_id(@release_list, @release_date)
       wiki_page_edit!(release_page_id, release_page_content)
       puts "Wrote release page: #{wiki_view_url(release_page_id)}"
-      list_content = wiki_page_content(release_list)
-      insert_link_in_list_content!(list_content, release_page_id, release_date)
-      wiki_page_edit!(release_list, list_content)
-      puts "Updated list page:  #{wiki_view_url(release_list)}"
+      list_content = wiki_page_content(@release_list)
+      insert_link_in_list_content!(list_content, release_page_id, @release_date)
+      wiki_page_edit!(@release_list, list_content)
+      puts "Updated list page:  #{wiki_view_url(@release_list)}"
     end
 
     def wiki_full_release_page_id(release_list, release_date)

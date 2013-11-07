@@ -26,6 +26,7 @@ spec = Gem::Specification.new do |s|
   s.autorequire = GEM
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,etc,lib,spec}/**/*")
   s.add_dependency('pivotal-tracker')
+  s.add_dependency('mediawiki-gateway', '= 0.5.1')
   s.homepage = ""
 end
 

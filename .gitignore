@@ -5,3 +5,5 @@ validate.rb
 pkg/
 .rvmrc
 .bundle
+.ruby-gemset
+.ruby-version

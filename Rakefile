@@ -4,7 +4,7 @@ require 'rubygems/specification'
 require 'date'
 require 'spec/rake/spectask'
 
-require 'lib/qa_release_tasks'
+require './lib/qa_release_tasks'
 
 GEM = "qa_release_tasks"
 GEM_VERSION = QaReleaseTasks.version
@@ -24,7 +24,7 @@ spec = Gem::Specification.new do |s|
   
   s.require_path = 'lib'
   s.autorequire = GEM
-  s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,lib,spec}/**/*")
+  s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,etc,lib,spec}/**/*")
   s.add_dependency('pivotal-tracker')
   s.homepage = ""
 end

@@ -4,3 +4,4 @@ validate.rb
 *.gem
 pkg/
 .rvmrc
+.bundle

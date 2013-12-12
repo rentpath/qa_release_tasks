@@ -20,6 +20,7 @@ module Git
     def annotate!(update_wiki_flag=false)
       tags = get_tags.reverse
       error "No version tags available." if tags.empty?
+      @repo_name = repo_name
 
       collect_wiki_inputs if update_wiki_flag
 

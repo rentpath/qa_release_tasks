@@ -9,6 +9,10 @@ module Git
       File.directory?('.git')
     end
 
+    def repo_name
+      File.basename(Dir.pwd)
+    end
+
     #  figure out what branch the pwd's repo is on
     def get_branch
       match = Regexp.new("^# On branch (.*)").match(`git status`)

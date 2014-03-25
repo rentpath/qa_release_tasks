@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
+require File.expand_path('../lib/qa_release_tasks/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name = "qa_release_tasks"
-  s.version = "1.3.6"
+  s.version = QaReleaseTasks::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason Noble", "Rein Henrichs"]
@@ -31,4 +32,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<pivotal-tracker>, [">= 0"])
     s.add_dependency(%q<mediawiki-gateway>, ["= 0.5.1"])
   end
+
+  s.add_development_dependency('rake', '>= 0.8.7')
+  s.add_development_dependency('rspec', '>= 1.3.0')
 end

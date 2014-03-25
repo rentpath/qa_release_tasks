@@ -1,24 +1,39 @@
+PATH
+  remote: .
+  specs:
+    qa_release_tasks (2.0.0)
+      mediawiki-gateway (= 0.5.1)
+      pivotal-tracker
+
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.14)
-      i18n (~> 0.6, >= 0.6.4)
-      multi_json (~> 1.0)
-    builder (3.2.0)
-    crack (0.3.2)
-    happymapper (0.4.0)
+    activesupport (4.0.4)
+      i18n (~> 0.6, >= 0.6.9)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    atomic (1.1.16)
+    builder (3.2.2)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
+    happymapper (0.4.1)
       libxml-ruby (~> 2.0)
-    i18n (0.6.5)
-    libxml-ruby (2.6.0)
+    i18n (0.6.9)
+    libxml-ruby (2.7.0)
     mediawiki-gateway (0.5.1)
       activesupport
       rest-client (>= 1.3.0)
-    mime-types (1.22)
-    multi_json (1.7.7)
-    nokogiri (1.5.9)
-    nokogiri-happymapper (0.5.6)
+    mime-types (2.2)
+    mini_portile (0.5.3)
+    minitest (4.7.5)
+    multi_json (1.9.2)
+    nokogiri (1.6.1)
+      mini_portile (~> 0.5.0)
+    nokogiri-happymapper (0.5.9)
       nokogiri (~> 1.5)
-    pivotal-tracker (0.5.10)
+    pivotal-tracker (0.5.12)
       builder
       builder
       crack
@@ -32,12 +47,15 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (1.3.0)
+    safe_yaml (1.0.1)
+    thread_safe (0.3.1)
+      atomic (>= 1.1.7, < 2)
+    tzinfo (0.3.39)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  mediawiki-gateway (= 0.5.1)
-  pivotal-tracker
-  rake (= 0.8.7)
-  rspec (= 1.3.0)
+  qa_release_tasks!
+  rake (>= 0.8.7)
+  rspec (>= 1.3.0)

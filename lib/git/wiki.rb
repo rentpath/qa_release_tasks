@@ -128,7 +128,7 @@ module Git
       result = table_start
       Struct.new("UnknownStory", :id, :name, :story_type, :url)
       stories.each do |story_id, commits|
-        story = @pivotal.stories.find(story_id) || Struct::UnknownStory.new(story_id, 'No Pivotal Story Available', 'Unknown', nil)
+        story = get_story(story_id)
 
         row = "|-\n| "
         row += story.url ? "[#{story.url} #{story.id}]" : "#{story.id}"
@@ -182,19 +182,43 @@ module Git
 
     private
 
+    def unknown_story(id)
+      Struct::UnknownStory.new(id, 'No Pivotal Story Available', 'Unknown', nil)
+    end
+
+    def get_story(story_id)
+      if @pivotal.is_a? Array
+        @pivotal.each do |pivotal|
+          story = pivotal.stories.find(story_id)
+          return story if story
+        end
+        unknown_story(story_id)
+      else
+        @pivotal.stories.find(story_id) || unknown_story(story_id)
+      end
+    end
+
     def initialize_pivotal
       if File.exists?('config/pivotal.yml')
         config = YAML.load_file("config/pivotal.yml")
       end
-      if !File.exists?('config/pivotal.yml') || config.nil? || config['token'].nil? || config['project'].nil?
+      if !File.exists?('config/pivotal.yml') || config.nil? || config['token'].nil? || (config['project'].nil? && config['projects'].nil?)
         puts "You need to create config/pivotal.yml with the following contents:"
         puts "\ttoken: _____PIVOTAL TOKEN ID____________"
-        puts "\tproject: _______ PIVOTAL PROJECT ID _______"
+        puts "\tproject: _______ PIVOTAL PROJECT ID _______ - OR - "
+        puts "\tprojects: "
+        puts "\t\t - PIVOTAL PROJECT ID 1"
+        puts "\t\t - PIVOTAL PROJECT ID 2"
+        puts "\t\t ... etc."
         exit
       end
       PivotalTracker::Client.use_ssl = true
       PivotalTracker::Client.token = config['token']
-      @pivotal = PivotalTracker::Project.find(config['project'])
+      if config['project']
+        @pivotal = PivotalTracker::Project.find(config['project'])
+      elsif config['projects']
+        @pivotal = config['projects'].map{|project_id| PivotalTracker::Project.find(project_id)}
+      end
     end
 
     def initialize_wiki

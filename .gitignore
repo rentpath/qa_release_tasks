@@ -7,3 +7,4 @@ pkg/
 .bundle
 .ruby-gemset
 .ruby-version
+/vendor/ruby

@@ -18,22 +18,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = "1.8.23"
   s.summary = "A gem that provides workflow driven rake tasks for git QA branch management"
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<pivotal-tracker>, [">= 0"])
-      s.add_runtime_dependency(%q<mediawiki-gateway>, ["= 0.5.1"])
-    else
-      s.add_dependency(%q<pivotal-tracker>, [">= 0"])
-      s.add_dependency(%q<mediawiki-gateway>, ["= 0.5.1"])
-    end
-  else
-    s.add_dependency(%q<pivotal-tracker>, [">= 0"])
-    s.add_dependency(%q<mediawiki-gateway>, ["= 0.5.1"])
-  end
-
-  s.add_development_dependency('rake', '>= 0.8.7')
-  s.add_development_dependency('rspec', '>= 1.3.0')
-  s.add_development_dependency('primedia')
+  s.add_runtime_dependency(%q<pivotal-tracker>, [">= 0"])
+  s.add_runtime_dependency(%q<mediawiki-gateway>, ["= 0.6.2"])
+  s.add_development_dependency('rake', '~> 10.4', '>= 10.0')
+  s.add_development_dependency('rspec', '~> 3.2', '>= 3.0.0')
+  s.add_development_dependency('primedia', '~> 0')
 end

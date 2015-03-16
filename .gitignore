@@ -6,5 +6,4 @@ pkg/
 .rvmrc
 .bundle
 .ruby-gemset
-.ruby-version
 /vendor/ruby
